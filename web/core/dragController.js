@@ -18,6 +18,23 @@ import {
 
 import { applyBox } from "../utils/nodeUtils.js";
 
+// A box that already spans the whole preview can't be meaningfully moved or
+// resized, so the interior should draw a new box instead of a no-op "move".
+function isFullCropBox(dragStart, dragEnd, preview) {
+  if (!dragStart || !dragEnd || !preview?.width || !preview?.height) return false;
+  const EPS = 2;
+  const minX = Math.min(dragStart[0], dragEnd[0]);
+  const minY = Math.min(dragStart[1], dragEnd[1]);
+  const maxX = Math.max(dragStart[0], dragEnd[0]);
+  const maxY = Math.max(dragStart[1], dragEnd[1]);
+  return (
+    minX <= EPS &&
+    minY <= EPS &&
+    maxX >= preview.width - EPS &&
+    maxY >= preview.height - EPS
+  );
+}
+
 export function handleOnMouseDown(node, e, pos, graphCanvas, preview) {
   const mousePos = [e.canvasX, e.canvasY];
   let local = getPreviewLocalPos(node.pos, mousePos, preview);
@@ -34,7 +51,12 @@ export function handleOnMouseDown(node, e, pos, graphCanvas, preview) {
     node.properties.dragEnd,
     local
   );
-  if (hit) {
+  const boxIsFull = isFullCropBox(
+    node.properties.dragStart,
+    node.properties.dragEnd,
+    preview
+  );
+  if (hit && !(hit === "move" && boxIsFull)) {
     node.dragging = true;
     node.dragMode = hit;
     node.dragStartPos = mousePos;

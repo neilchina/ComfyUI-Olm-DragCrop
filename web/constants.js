@@ -54,8 +54,8 @@ export const TEXT = {
 
 export const TEXTCONTENT = {
   aspectStringMsg: "Use values like 0.5 or 16:9",
-  imageAreaInfoMsgRow1: "Out of sync, run Graph to get preview",
-  imageAreaInfoMsgRow2: "Crop values reset on sync, so refresh first!",
+  imageAreaInfoMsgRow1: "No preview yet — run the graph first",
+  imageAreaInfoMsgRow2: "Then drag in the preview to pick a crop area",
   usageInstructionMsg: "Drag in the preview to select a crop area.",
   setRatiofromCropDlg:
     "⚠️ Use the current crop box dimensions to set the aspect ratio?",
